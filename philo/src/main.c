@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:53:34 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/13 17:27:33 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/14 15:02:28 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,21 @@
 void	*ft_count_time(void *arg)
 {
 	t_vars	*vars;
+	pthread_mutex_t	mutex;
 
 	vars = (t_vars *) arg;
+	pthread_mutex_init(&mutex, NULL);
 	while (vars->is_end == 0)
 	{
+		pthread_mutex_lock(&mutex);
 		gettimeofday(&vars->tv, &vars->tz);
 		vars->current_time = vars->tv.tv_sec * 1000;
 		vars->current_time += vars->tv.tv_usec / 1000;
+		pthread_mutex_unlock(&mutex);
 		usleep(500);
 	}
+	pthread_mutex_destroy(&mutex);
 	return (NULL);
-}
-
-static void	ft_init_threads(t_vars *vars)
-{
-	int	i;
-
-	i = 1;
-	pthread_create(&vars->trd[1], NULL, &ft_philosopher, vars);
-	while (i <= vars->nb_forks)
-	{
-		pthread_join(vars->trd[i], NULL);
-		i++;
-	}
-	pthread_mutex_init(&vars->mutex, NULL);
 }
 
 int	main(int ac, char **av)
@@ -52,14 +43,13 @@ int	main(int ac, char **av)
 		printf(ARG_ERROR);
 		return (0);
 	}
-	pthread_create(&vars->trd[0], NULL, &ft_count_time, vars);
+	pthread_create(vars->trd, NULL, &ft_count_time, vars);
 	ft_init_threads(vars);
 	while (vars->is_end == 0)
 	{
 	}
-	usleep (100);
 	pthread_mutex_destroy(&vars->mutex);
-	free(vars->trd);
-	free(vars);
+	ft_quit_all_threads(vars);
+	ft_free_all(vars);
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: gbricot <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/07 14:50:07 by gbricot           #+#    #+#              #
-#    Updated: 2023/06/13 17:20:46 by gbricot          ###   ########.fr        #
+#    Updated: 2023/06/14 14:25:56 by gbricot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ CC = gcc
 SRC = 	src/main.c \
 	src/ft_life_cycle.c \
 	src/ft_init.c \
+	src/ft_clear.c \
 	src/ft_calloc.c \
 	src/ft_atoi.c
 
