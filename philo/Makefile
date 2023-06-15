@@ -6,7 +6,7 @@
 #    By: gbricot <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/07 14:50:07 by gbricot           #+#    #+#              #
-#    Updated: 2023/06/14 14:25:56 by gbricot          ###   ########.fr        #
+#    Updated: 2023/06/15 15:11:16 by gbricot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = philo
 
 CC = gcc
 
-//CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 SRC = 	src/main.c \
 	src/ft_life_cycle.c \

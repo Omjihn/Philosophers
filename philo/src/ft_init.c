@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 17:24:43 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/14 16:31:35 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/15 14:58:39 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,18 @@
 
 void	ft_init_threads(t_vars *vars)
 {
-        int	i;
+	int	i;
 
 	i = 0;
 	while (i < vars->nb_forks)
 	{
-		pthread_create(&vars->philos[i].thread, NULL, &ft_philosopher, vars);
+		vars->philos[i] = (t_philo *) ft_calloc (sizeof(t_philo), 1);
+		i++;
+	}
+	i = 0;
+	while (i < vars->nb_forks)
+	{
+		pthread_create(&vars->philos[i]->thread, NULL, &ft_philosopher, vars);
 		i++;
 	}
 	pthread_mutex_init(&vars->mutex, NULL);
@@ -48,6 +54,18 @@ static char	ft_check_numbers(int ac, char **av)
 	return (1);
 }
 
+static void	ft_init_2(t_vars *vars, int ac, char **av)
+{
+	vars->time_to_die = ft_atoi(av[2]);
+	vars->time_to_eat = ft_atoi(av[3]);
+	vars->time_to_sleep = ft_atoi(av[4]);
+	if (ac == 6)
+		vars->nb_eat = ft_atoi(av[5]);
+	else
+		vars->nb_eat = -1;
+	vars->philos = ft_calloc (sizeof(t_philo *), vars->nb_forks + 1);
+}
+
 t_vars	*ft_init(int ac, char **av)
 {
 	t_vars	*vars;
@@ -58,21 +76,16 @@ t_vars	*ft_init(int ac, char **av)
 	if (!vars)
 		return (NULL);
 	vars->nb_forks = ft_atoi(av[1]);
-	vars->time_to_die = ft_atoi(av[2]);
-	vars->time_to_eat = ft_atoi(av[3]);
-	vars->time_to_sleep = ft_atoi(av[4]);
-	if (ac == 6)
-		vars->nb_eat = ft_atoi(av[5]);
-	else
-		vars->nb_eat = -1;
-	vars->philos = (t_philo *) ft_calloc (sizeof(t_philo), vars->nb_forks + 1);
+	if (vars->nb_forks == 0)
+	{
+		free (vars);
+		return (NULL);
+	}
+	ft_init_2(vars, ac, av);
 	if (!vars->philos)
 	{
 		return (NULL);
 		ft_free_all(vars);
 	}
-	gettimeofday(&vars->tv, &vars->tz);
-	vars->base_time = vars->tv.tv_sec * 1000;
-	vars->base_time += vars->tv.tv_usec / 1000;
 	return (vars);
 }

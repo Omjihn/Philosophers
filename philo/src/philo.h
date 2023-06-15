@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:51:42 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/14 15:02:30 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/15 15:02:42 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,11 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-# define ARG_ERROR "Error please you need to enter 4 or 5 arguments :\n./philo [number_of_philosophers]\n\t[time_to_die]\n\t[time_to_eat]\n\t[time_to_sleep]\noptional :\n\t[number_of_times_each_philosopher_must_eat]\n"
+# define ARG_ERR "Error please you need to enter 4 or 5 arguments :\n./philo "
+# define ARG_ERR_1 "[number_of_philosophers] (int more than 1)\n\t[time_to_d"
+# define ARG_ERR_2 "ie] (in ms)\n\t[time_to_eat] (in ms)\n\t[time_to_sleep] "
+# define ARG_ERR_3 "(in ms)\noptional :\n\t[number_of_times_each_philosopher"
+# define ARG_ERR_4 "_must_eat]\n"
 
 # define MSG_SLEEP "%ld ms %d is sleeping\n"
 
@@ -30,12 +34,13 @@
 
 # define MSG_FORK "%ld ms %d has taken a fork\n"
 
+# define DEAD_MSG "%ld ms %d died\n"
+
 typedef struct s_philo
 {
 	int			pos;
 	int			index;
 	int			next_index;
-	int			prev_index;
 	int			nb_forks;
 	int			nb_eat;
 	long int	time_to_die;
@@ -48,12 +53,14 @@ typedef struct s_philo
 typedef struct s_vars
 {
 	int				philo_nb;
+	int				nb_forks;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
+	int				starting_block;
 	int				nb_eat;
 	int				is_end;
-	t_philo		*philos;
+	t_philo			**philos;
 	long int		base_time;
 	long int		current_time;
 	pthread_t		trd[1];
