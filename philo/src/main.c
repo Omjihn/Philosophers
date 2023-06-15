@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:53:34 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/15 15:11:33 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/15 17:23:54 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	*ft_count_time(void *arg)
 	vars->base_time = vars->tv.tv_sec * 1000;
 	vars->base_time += vars->tv.tv_usec / 1000;
 	vars->starting_block = 1;
-	while (vars->is_end == 0)
+	while (vars->is_end == 0 && (vars->nb_forks != vars->nb_finish))
 	{
 		pthread_mutex_lock(&vars->mutex);
 		gettimeofday(&vars->tv, &vars->tz);
@@ -46,9 +46,11 @@ int	main(int ac, char **av)
 	}
 	ft_init_threads(vars);
 	pthread_create(vars->trd, NULL, &ft_count_time, vars);
-	while (vars->is_end == 0)
+	while (vars->is_end == 0 && (vars->nb_forks != vars->nb_finish))
 	{
 	}
+	if (vars->nb_forks == vars->nb_finish)
+		printf (EAT_MSG, vars->current_time - vars->base_time);
 	ft_quit_all_threads(vars);
 	pthread_mutex_destroy(&vars->mutex);
 	ft_free_all(vars);

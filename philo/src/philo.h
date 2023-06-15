@@ -24,7 +24,7 @@
 # define ARG_ERR_1 "[number_of_philosophers] (int more than 1)\n\t[time_to_d"
 # define ARG_ERR_2 "ie] (in ms)\n\t[time_to_eat] (in ms)\n\t[time_to_sleep] "
 # define ARG_ERR_3 "(in ms)\noptional :\n\t[number_of_times_each_philosopher"
-# define ARG_ERR_4 "_must_eat]\n"
+# define ARG_ERR_4 "_must_eat] (positive int)\n"
 
 # define MSG_SLEEP "%ld ms %d is sleeping\n"
 
@@ -35,6 +35,8 @@
 # define MSG_FORK "%ld ms %d has taken a fork\n"
 
 # define DEAD_MSG "%ld ms %d died\n"
+
+# define EAT_MSG "%ld ms all philosophers have eaten\n"
 
 typedef struct s_philo
 {
@@ -59,6 +61,7 @@ typedef struct s_vars
 	int				time_to_sleep;
 	int				starting_block;
 	int				nb_eat;
+	int				nb_finish;
 	int				is_end;
 	t_philo			**philos;
 	long int		base_time;
@@ -74,6 +77,7 @@ int		ft_atoi(const char *nptr);
 void	ft_init_threads(t_vars *vars);
 void	ft_quit_all_threads(t_vars *vars);
 void	ft_free_all(t_vars *vars);
+void	ft_life_cycle_extend(t_philo *philo, t_vars *vars);
 
 void	*ft_philosopher(void *arg);
 void	*ft_calloc(size_t nmemb, size_t size);

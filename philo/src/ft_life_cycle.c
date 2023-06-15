@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 08:44:05 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/15 15:11:05 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/15 17:33:24 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static t_philo	*ft_init_philo(t_vars *vars)
 	if (vars->nb_forks == 1)
 		philo->next_index = philo->index;
 	philo->pos = philo->index + 1;
-	philo->nb_eat = vars->nb_eat;
 	philo->actual = 's';
 	philo->nb_forks = 1;
 	pthread_mutex_lock(&vars->mutex);
@@ -46,7 +45,17 @@ static void	ft_philo_eat(t_philo *philo, t_vars *vars)
 	philo->nb_forks--;
 	pthread_mutex_unlock(&vars->mutex);
 	philo->time_to_die = vars->current_time + vars->time_to_die;
-	philo->actual = 'e';
+	if (philo->nb_eat != -1)
+		philo->nb_eat++;
+	if (philo->nb_eat == vars->nb_eat)
+	{
+		pthread_mutex_lock(&vars->mutex);
+		vars->nb_finish++;
+		pthread_mutex_unlock(&vars->mutex);
+		philo->actual = 'f';
+	}
+	else
+		philo->actual = 'e';
 }
 
 static void	ft_steal_fork(t_philo *philo, t_vars *vars)
@@ -104,13 +113,9 @@ void	*ft_philosopher(void *arg)
 	while (philo->time_to_die > vars->current_time && vars->is_end == 0)
 	{
 		ft_philo_extend(vars, philo);
+		if (philo->actual == 'f')
+			return (NULL);
 	}
-	if (vars->is_end == 0)
-	{
-		pthread_mutex_lock(&vars->mutex);
-		vars->is_end = 1;
-		pthread_mutex_unlock(&vars->mutex);
-		printf(DEAD_MSG, vars->current_time - vars->base_time, philo->pos);
-	}
+	ft_life_cycle_extend(philo, vars);
 	return (NULL);
 }
