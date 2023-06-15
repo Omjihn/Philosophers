@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:17:12 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/15 14:30:26 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/15 17:57:01 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ void	ft_quit_all_threads(t_vars *vars)
 	i = 0;
 	while (i < vars->philo_nb)
 	{
-		while (pthread_join(vars->philos[i]->thread, NULL) == 0)
-		{
-		}
+		pthread_detach(vars->philos[i]->thread);
 		i++;
 	}
 	while (pthread_join(vars->trd[0], NULL) == 0)
