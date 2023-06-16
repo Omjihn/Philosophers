@@ -20,11 +20,11 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-# define ARG_ERR "Error please you need to enter 4 or 5 arguments :\n./philo "
-# define ARG_ERR_1 "[number_of_philosophers] (int more than 1)\n\t[time_to_d"
-# define ARG_ERR_2 "ie] (in ms)\n\t[time_to_eat] (in ms)\n\t[time_to_sleep] "
-# define ARG_ERR_3 "(in ms)\noptional :\n\t[number_of_times_each_philosopher"
-# define ARG_ERR_4 "_must_eat] (positive int)\n"
+# define ERR "Error please you need to enter 4 or 5 arguments :\n./philo "
+# define ERR_1 "[number_of_philosophers] (max 32754)\n\t[time_to_d"
+# define ERR_2 "ie] (ms)\n\t[time_to_eat] (ms)\n\t[time_to_sleep] "
+# define ERR_3 "(ms)\noptional :\n\t[number_of_times_each_philosopher"
+# define ERR_4 "_must_eat] (positive int)\n"
 
 # define MSG_SLEEP "%ld ms %d is sleeping\n"
 
@@ -34,9 +34,19 @@
 
 # define MSG_FORK "%ld ms %d has taken a fork\n"
 
-# define DEAD_MSG "%ld ms %d died\n"
+# define DEAD "%ld ms %d died\n"
 
 # define EAT_MSG "%ld ms all philosophers have eaten\n"
+
+# define OF_MSG "Error check if your arguments does not overflow\n"
+
+# define TRD_MSG "Error number of philosopher must be betwin 0 and 32755\n"
+
+# define GREEN "\033[0;32m"
+
+# define RED "\033[0;31m"
+
+# define WTE "\033[0;37m"
 
 typedef struct s_philo
 {
@@ -63,6 +73,7 @@ typedef struct s_vars
 	int				nb_eat;
 	int				nb_finish;
 	int				is_end;
+	char			error;
 	t_philo			**philos;
 	long int		base_time;
 	long int		current_time;
@@ -72,7 +83,7 @@ typedef struct s_vars
 	pthread_mutex_t	mutex;
 }			t_vars;
 
-int		ft_atoi(const char *nptr);
+int		ft_atoi(const char *nptr, t_vars *vars);
 
 void	ft_init_threads(t_vars *vars);
 void	ft_quit_all_threads(t_vars *vars);
