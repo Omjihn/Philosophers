@@ -14,11 +14,8 @@
 
 void	ft_life_cycle_extend(t_philo *philo, t_vars *vars)
 {
-	if (vars->is_end == 0)
-	{
-		printf(RED DEAD WTE, vars->current_time - vars->base_time, philo->pos);
-		pthread_mutex_lock(&vars->mutex);
-		vars->is_end = 1;
-		pthread_mutex_unlock(&vars->mutex);
-	}
+	vars->msg_dead = 1;
+	ft_putnbr_fd(vars->current_time - vars->base_time, 1);
+	write (1, " ms ", 4);
+	ft_putnbr_fd(philo->pos, 1);
 }

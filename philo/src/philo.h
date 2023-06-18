@@ -60,6 +60,7 @@ typedef struct s_philo
 	long int	time_end_sleep;
 	char		actual;
 	pthread_t	thread;
+	pthread_mutex_t	mutex;
 }			t_philo;
 
 typedef struct s_vars
@@ -73,6 +74,7 @@ typedef struct s_vars
 	int				nb_eat;
 	int				nb_finish;
 	int				is_end;
+	int				msg_dead;
 	char			error;
 	t_philo			**philos;
 	long int		base_time;
@@ -80,7 +82,7 @@ typedef struct s_vars
 	pthread_t		trd[1];
 	struct timeval	tv;
 	struct timezone	tz;
-	pthread_mutex_t	mutex;
+	pthread_mutex_t mutex;
 }			t_vars;
 
 int		ft_atoi(const char *nptr, t_vars *vars);
@@ -88,6 +90,7 @@ int		ft_atoi(const char *nptr, t_vars *vars);
 void	ft_init_threads(t_vars *vars);
 void	ft_quit_all_threads(t_vars *vars);
 void	ft_free_all(t_vars *vars);
+void	ft_putnbr_fd(long int nb, int fd);
 void	ft_life_cycle_extend(t_philo *philo, t_vars *vars);
 
 void	*ft_philosopher(void *arg);

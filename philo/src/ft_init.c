@@ -28,7 +28,6 @@ void	ft_init_threads(t_vars *vars)
 		pthread_create(&vars->philos[i]->thread, NULL, &ft_philosopher, vars);
 		i++;
 	}
-	pthread_mutex_init(&vars->mutex, NULL);
 }
 
 static char	ft_check_numbers(int ac, char **av)

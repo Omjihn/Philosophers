@@ -33,8 +33,10 @@ void	ft_quit_all_threads(t_vars *vars)
 	i = 0;
 	while (vars->philos[i])
 	{
+		pthread_mutex_destroy(&vars->philos[i]->mutex);
 		pthread_detach(vars->philos[i]->thread);
 		i++;
 	}
 	pthread_detach(vars->trd[0]);
+	pthread_mutex_destroy(&vars->mutex);
 }

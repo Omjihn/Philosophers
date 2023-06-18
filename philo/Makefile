@@ -24,6 +24,7 @@ SRC = 	src/main.c \
 	src/ft_init.c \
 	src/ft_clear.c \
 	src/ft_calloc.c \
+	src/ft_putnbr_fd.c \
 	src/ft_atoi.c
 
 OBJ = $(SRC:.c=.o)

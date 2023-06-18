@@ -16,7 +16,6 @@ static t_philo	*ft_init_philo(t_vars *vars)
 {
 	t_philo	*philo;
 
-	pthread_mutex_lock(&vars->mutex);
 	philo = vars->philos[vars->philo_nb];
 	philo->index = vars->philo_nb;
 	if (philo->index == vars->nb_forks - 1)
@@ -28,34 +27,28 @@ static t_philo	*ft_init_philo(t_vars *vars)
 	philo->pos = philo->index + 1;
 	philo->actual = 's';
 	philo->nb_forks = 1;
+	pthread_mutex_init(&philo->mutex, NULL);
 	vars->philo_nb++;
-	pthread_mutex_unlock(&vars->mutex);
 	return (philo);
 }
 
 static void	ft_philo_eat(t_philo *philo, t_vars *vars)
 {
 	printf(MSG_EAT, vars->current_time - vars->base_time, philo->pos);
-	pthread_mutex_lock(&vars->mutex);
 	philo->time_end_eat = vars->current_time + vars->time_to_eat;
-	pthread_mutex_unlock(&vars->mutex);
 	while (vars->current_time <= philo->time_end_eat && vars->is_end == 0)
 	{
-		pthread_mutex_lock(&vars->mutex);
-		pthread_mutex_unlock(&vars->mutex);
 	}
-	pthread_mutex_lock(&vars->mutex);
+	pthread_mutex_lock(&philo->mutex);
 	vars->philos[philo->next_index]->nb_forks += 1;
 	philo->nb_forks -= 1;
+	pthread_mutex_unlock(&philo->mutex);
 	philo->time_to_die = vars->current_time + vars->time_to_die;
-	pthread_mutex_unlock(&vars->mutex);
 	if (philo->nb_eat != -1)
 		philo->nb_eat++;
 	if (philo->nb_eat == vars->nb_eat)
 	{
-		pthread_mutex_lock(&vars->mutex);
 		vars->nb_finish++;
-		pthread_mutex_unlock(&vars->mutex);
 		philo->actual = 'f';
 	}
 	else
@@ -68,10 +61,10 @@ static void	ft_steal_fork(t_philo *philo, t_vars *vars)
 		&& (philo->index != philo->next_index)
 		&& vars->is_end == 0)
 	{
-		pthread_mutex_lock(&vars->mutex);
+		pthread_mutex_lock(&philo->mutex);
 		vars->philos[philo->next_index]->nb_forks -= 1;
 		philo->nb_forks += 1;
-		pthread_mutex_unlock(&vars->mutex);
+		pthread_mutex_unlock(&philo->mutex);
 		printf(MSG_FORK, vars->current_time - vars->base_time, philo->pos);
 	}
 }
@@ -89,18 +82,14 @@ static void	ft_philo_extend(t_vars *vars, t_philo *philo)
 	{
 		printf(MSG_SLEEP, vars->current_time - vars->base_time, philo->pos);
 		philo->time_end_sleep = vars->current_time + vars->time_to_sleep;
-		pthread_mutex_lock(&vars->mutex);
 		philo->actual = 's';
-		pthread_mutex_unlock(&vars->mutex);
 	}
 	else if (philo->actual == 's'
 		&& vars->current_time >= philo->time_end_sleep
 		&& vars->is_end == 0)
 	{
 		printf(MSG_THINK, vars->current_time - vars->base_time, philo->pos);
-		pthread_mutex_lock(&vars->mutex);
 		philo->actual = 't';
-		pthread_mutex_unlock(&vars->mutex);
 	}
 }
 
@@ -114,16 +103,17 @@ void	*ft_philosopher(void *arg)
 	while (philo->pos != vars->starting_block)
 	{
 	}
-	pthread_mutex_lock(&vars->mutex);
 	vars->starting_block++;
-	pthread_mutex_unlock(&vars->mutex);
 	philo->time_to_die = vars->time_to_die + vars->current_time;
 	while (philo->time_to_die > vars->current_time && vars->is_end == 0)
 	{
+		usleep(25);
 		ft_philo_extend(vars, philo);
 		if (philo->actual == 'f')
 			return (NULL);
 	}
-	ft_life_cycle_extend(philo, vars);
+	vars->is_end = 1;
+	if (vars->msg_dead == 0)
+		ft_life_cycle_extend(philo, vars);
 	return (NULL);
 }
