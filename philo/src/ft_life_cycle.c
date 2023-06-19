@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 08:44:05 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/16 15:48:45 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/19 17:51:31 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,18 @@ static t_philo	*ft_init_philo(t_vars *vars)
 
 static void	ft_philo_eat(t_philo *philo, t_vars *vars)
 {
+	pthread_mutex_unlock(&philo->mutex);
 	printf(MSG_EAT, vars->current_time - vars->base_time, philo->pos);
 	philo->time_end_eat = vars->current_time + vars->time_to_eat;
 	while (vars->current_time <= philo->time_end_eat && vars->is_end == 0)
 	{
 	}
 	pthread_mutex_lock(&philo->mutex);
+	pthread_mutex_lock(&vars->philos[philo->next_index]->mutex);
 	vars->philos[philo->next_index]->nb_forks += 1;
 	philo->nb_forks -= 1;
 	pthread_mutex_unlock(&philo->mutex);
+	pthread_mutex_unlock(&vars->philos[philo->next_index]->mutex);
 	philo->time_to_die = vars->current_time + vars->time_to_die;
 	if (philo->nb_eat != -1)
 		philo->nb_eat++;
@@ -57,28 +60,32 @@ static void	ft_philo_eat(t_philo *philo, t_vars *vars)
 
 static void	ft_steal_fork(t_philo *philo, t_vars *vars)
 {
-	if (vars->philos[philo->next_index]->nb_forks == 1
-		&& (philo->index != philo->next_index)
-		&& vars->is_end == 0)
+	if ((philo->index != philo->next_index) && vars->is_end == 0)
 	{
 		pthread_mutex_lock(&philo->mutex);
 		vars->philos[philo->next_index]->nb_forks -= 1;
 		philo->nb_forks += 1;
-		pthread_mutex_unlock(&philo->mutex);
+		pthread_mutex_unlock(&vars->philos[philo->next_index]->mutex);
 		printf(MSG_FORK, vars->current_time - vars->base_time, philo->pos);
 	}
 }
 
 static void	ft_philo_extend(t_vars *vars, t_philo *philo)
 {
-	if (philo->actual == 't' && philo->nb_forks == 1
-		&& vars->is_end == 0)
+	if (philo->actual == 't' && vars->is_end == 0)
 	{
-		ft_steal_fork(philo, vars);
+		if (philo->nb_forks == 1)
+		{
+			pthread_mutex_lock(&vars->philos[philo->next_index]->mutex);
+			if (vars->philos[philo->next_index]->nb_forks == 1)
+				ft_steal_fork(philo, vars);
+			pthread_mutex_unlock(&vars->philos[philo->next_index]->mutex);
+
+		}
 		if (philo->nb_forks == 2)
 			ft_philo_eat(philo, vars);
 	}
-	else if (philo->actual == 'e' && vars->is_end == 0)
+	if (philo->actual == 'e' && vars->is_end == 0)
 	{
 		printf(MSG_SLEEP, vars->current_time - vars->base_time, philo->pos);
 		philo->time_end_sleep = vars->current_time + vars->time_to_sleep;
@@ -102,12 +109,13 @@ void	*ft_philosopher(void *arg)
 	philo = ft_init_philo(vars);
 	while (philo->pos != vars->starting_block)
 	{
+		usleep(50);
 	}
 	vars->starting_block++;
 	philo->time_to_die = vars->time_to_die + vars->current_time;
 	while (philo->time_to_die > vars->current_time && vars->is_end == 0)
 	{
-		usleep(25);
+		usleep(10);
 		ft_philo_extend(vars, philo);
 		if (philo->actual == 'f')
 			return (NULL);

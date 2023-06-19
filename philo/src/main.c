@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:53:34 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/16 15:42:09 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/19 13:15:08 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,11 @@ int	main(int ac, char **av)
 	while (vars->is_end == 0 && (vars->nb_forks != vars->nb_finish))
 	{
 	}
+	usleep (100);
 	if (vars->nb_forks == vars->nb_finish)
 		printf (GREEN EAT_MSG, vars->current_time - vars->base_time);
 	ft_quit_all_threads(vars);
+	usleep (100);
 	ft_free_all(vars);
 	return (0);
 }

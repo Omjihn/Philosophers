@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:51:42 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/15 15:02:42 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/19 12:46:10 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,16 @@
 
 typedef struct s_philo
 {
-	int			pos;
-	int			index;
-	int			next_index;
-	int			nb_forks;
-	int			nb_eat;
-	long int	time_to_die;
-	long int	time_end_eat;
-	long int	time_end_sleep;
-	char		actual;
-	pthread_t	thread;
+	int				pos;
+	int				index;
+	int				next_index;
+	int				nb_forks;
+	int				nb_eat;
+	char			actual;
+	long int		time_to_die;
+	long int		time_end_eat;
+	long int		time_end_sleep;
+	pthread_t		thread;
 	pthread_mutex_t	mutex;
 }			t_philo;
 
@@ -82,7 +82,7 @@ typedef struct s_vars
 	pthread_t		trd[1];
 	struct timeval	tv;
 	struct timezone	tz;
-	pthread_mutex_t mutex;
+	pthread_mutex_t	mutex;
 }			t_vars;
 
 int		ft_atoi(const char *nptr, t_vars *vars);
@@ -91,6 +91,9 @@ void	ft_init_threads(t_vars *vars);
 void	ft_quit_all_threads(t_vars *vars);
 void	ft_free_all(t_vars *vars);
 void	ft_putnbr_fd(long int nb, int fd);
+void	ft_putstr_fd(char *s, int fd);
+void	ft_putchar_fd(char c, int fd);
+
 void	ft_life_cycle_extend(t_philo *philo, t_vars *vars);
 
 void	*ft_philosopher(void *arg);
