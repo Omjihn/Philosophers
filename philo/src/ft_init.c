@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 17:24:43 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/16 15:50:24 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/20 16:23:53 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	ft_init_threads(t_vars *vars)
 		pthread_create(&vars->philos[i]->thread, NULL, &ft_philosopher, vars);
 		i++;
 	}
+	vars->base_time = ft_gct();
 }
 
 static char	ft_check_numbers(int ac, char **av)
@@ -62,6 +63,8 @@ static void	ft_init_2(t_vars *vars, int ac, char **av)
 		vars->nb_eat = ft_atoi(av[5], vars);
 	else
 		vars->nb_eat = -1;
+	if (vars->nb_eat == 0)
+		vars->nb_eat = -1;
 	vars->philos = ft_calloc (sizeof(t_philo *), vars->nb_forks + 1);
 }
 
@@ -70,10 +73,7 @@ t_vars	*ft_init(int ac, char **av)
 	t_vars	*vars;
 
 	if (ft_check_numbers(ac, av) == 0)
-	{
-		printf(ERR ERR_1 ERR_2 ERR_3 ERR_4);
 		return (NULL);
-	}
 	vars = (t_vars *) ft_calloc (sizeof(t_vars), 1);
 	if (!vars)
 		return (NULL);

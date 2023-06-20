@@ -6,7 +6,7 @@
 #    By: gbricot <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/07 14:50:07 by gbricot           #+#    #+#              #
-#    Updated: 2023/06/16 09:37:40 by gbricot          ###   ########.fr        #
+#    Updated: 2023/06/20 16:28:53 by gbricot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,12 +19,11 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
 SRC = 	src/main.c \
-	src/ft_life_cycle.c \
-	src/ft_life_cycle_extend.c \
+	src/ft_philosopher.c \
+	src/ft_philosopher_utils.c \
 	src/ft_init.c \
 	src/ft_clear.c \
 	src/ft_calloc.c \
-	src/ft_putnbr_fd.c \
 	src/ft_atoi.c
 
 OBJ = $(SRC:.c=.o)

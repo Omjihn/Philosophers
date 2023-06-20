@@ -20,7 +20,7 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-# define ERR "Error please you need to enter 4 or 5 arguments :\n./philo "
+# define ERR "./philo "
 # define ERR_1 "[number_of_philosophers] (max 32754)\n\t[time_to_d"
 # define ERR_2 "ie] (ms)\n\t[time_to_eat] (ms)\n\t[time_to_sleep] "
 # define ERR_3 "(ms)\noptional :\n\t[number_of_times_each_philosopher"
@@ -70,7 +70,6 @@ typedef struct s_vars
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
-	int				starting_block;
 	int				nb_eat;
 	int				nb_finish;
 	int				is_end;
@@ -85,21 +84,32 @@ typedef struct s_vars
 	pthread_mutex_t	mutex;
 }			t_vars;
 
-int		ft_atoi(const char *nptr, t_vars *vars);
+/*		UTILS			*/
 
-void	ft_init_threads(t_vars *vars);
-void	ft_quit_all_threads(t_vars *vars);
-void	ft_free_all(t_vars *vars);
-void	ft_putnbr_fd(long int nb, int fd);
-void	ft_putstr_fd(char *s, int fd);
-void	ft_putchar_fd(char c, int fd);
+int			ft_atoi(const char *nptr, t_vars *vars);
 
-void	ft_life_cycle_extend(t_philo *philo, t_vars *vars);
+void		*ft_calloc(size_t nmemb, size_t size);
 
-void	*ft_philosopher(void *arg);
-void	*ft_calloc(size_t nmemb, size_t size);
-void	*ft_count_time(void *arg);
+/*		GET TIME		*/
 
-t_vars	*ft_init(int ac, char **av);
+long int	ft_get(t_vars *vars);
+long int	ft_gct(void);
+
+/*		INIT/CLEAR		*/
+
+void		ft_init_threads(t_vars *vars);
+void		ft_quit_all_threads(t_vars *vars);
+void		ft_free_all(t_vars *vars);
+
+t_vars		*ft_init(int ac, char **av);
+
+/*		PHILOS ROUTINE		*/
+
+void		ft_is_dead(t_vars *vars, t_philo *philo);
+void		ft_steal_fork(t_vars *vars, t_philo *philo);
+void		ft_eat(t_vars *vars, t_philo *philo);
+void		ft_think(t_vars *vars, t_philo *philo);
+void		ft_sleep(t_vars *vars, t_philo *philo);
+void		*ft_philosopher(void *arg);
 
 #endif
