@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 12:53:32 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/20 16:27:14 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/20 16:49:53 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	*ft_philosopher(void *arg)
 		}
 		if (philo->actual == 'e')
 			ft_sleep(vars, philo);
-		usleep(10);
+		usleep(20);
 	}
 	return (NULL);
 }

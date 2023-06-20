@@ -79,8 +79,6 @@ typedef struct s_vars
 	long int		base_time;
 	long int		current_time;
 	pthread_t		trd[1];
-	struct timeval	tv;
-	struct timezone	tz;
 	pthread_mutex_t	mutex;
 }			t_vars;
 

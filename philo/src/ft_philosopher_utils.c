@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:27:50 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/20 16:43:48 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/20 17:51:00 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ void	ft_eat(t_vars *vars, t_philo *philo)
 	{
 		pthread_mutex_unlock(&philo->mutex);
 		philo->time_end_eat = ft_gct() + vars->time_to_eat;
-		philo->time_to_die = ft_gct() + vars->time_to_die;
 		printf(MSG_EAT, ft_get(vars), philo->pos);
 		philo->actual = 'e';
+		philo->time_to_die = ft_gct() + vars->time_to_die;
 	}
 	pthread_mutex_unlock(&philo->mutex);
 }
