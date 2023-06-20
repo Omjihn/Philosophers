@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:27:50 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/20 16:33:56 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/20 16:43:48 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_is_dead(t_vars *vars, t_philo *philo)
 void	ft_steal_fork(t_vars *vars, t_philo *philo)
 {
 	pthread_mutex_lock(&philo->mutex);
-	if (philo->nb_forks == 1 && vars->is_end == 0)
+	if (philo->nb_forks == 1 && vars->is_end == 0 && vars->nb_forks > 1)
 	{
 		pthread_mutex_unlock(&philo->mutex);
 		pthread_mutex_lock(&vars->philos[philo->next_index]->mutex);
