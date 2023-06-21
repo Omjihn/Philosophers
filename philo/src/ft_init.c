@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 17:24:43 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/20 17:41:10 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/21 12:55:48 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,6 @@ void	ft_init_threads(t_vars *vars)
 	while (i < vars->nb_forks)
 	{
 		vars->philos[i] = (t_philo *) ft_calloc (sizeof(t_philo), 1);
-		i++;
-	}
-	i = 0;
-	while (i < vars->nb_forks)
-	{
 		pthread_create(&vars->philos[i]->thread, NULL, &ft_philosopher, vars);
 		i++;
 	}
@@ -56,6 +51,8 @@ static char	ft_check_numbers(int ac, char **av)
 
 static void	ft_init_2(t_vars *vars, int ac, char **av)
 {
+	int	i;
+
 	vars->time_to_die = ft_atoi(av[2], vars);
 	vars->time_to_eat = ft_atoi(av[3], vars);
 	vars->time_to_sleep = ft_atoi(av[4], vars);
@@ -66,6 +63,16 @@ static void	ft_init_2(t_vars *vars, int ac, char **av)
 	if (vars->nb_eat == 0)
 		vars->nb_eat = -1;
 	vars->philos = ft_calloc (sizeof(t_philo *), vars->nb_forks + 1);
+	vars->fork = ft_calloc (sizeof(t_philo *), vars->nb_forks + 1);
+	i = 0;
+	while (i < vars->nb_forks)
+	{
+		vars->fork[i] = malloc(sizeof(t_fork));
+		pthread_mutex_init(&vars->fork[i]->mutex, NULL);
+		vars->fork[i]->nb = 1;
+		i++;
+	}
+	pthread_mutex_init(&vars->mutex, NULL);
 }
 
 t_vars	*ft_init(int ac, char **av)

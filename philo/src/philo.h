@@ -53,6 +53,7 @@ typedef struct s_philo
 	int				pos;
 	int				index;
 	int				next_index;
+	int				prev_index;
 	int				nb_forks;
 	int				nb_eat;
 	char			actual;
@@ -60,8 +61,13 @@ typedef struct s_philo
 	long int		time_end_eat;
 	long int		time_end_sleep;
 	pthread_t		thread;
-	pthread_mutex_t	mutex;
 }			t_philo;
+
+typedef struct s_fork
+{
+	char			nb;
+	pthread_mutex_t	mutex;
+}			t_fork;
 
 typedef struct s_vars
 {
@@ -76,6 +82,7 @@ typedef struct s_vars
 	int				msg_dead;
 	char			error;
 	t_philo			**philos;
+	t_fork			**fork;
 	long int		base_time;
 	long int		current_time;
 	pthread_t		trd[1];
@@ -88,7 +95,7 @@ int			ft_atoi(const char *nptr, t_vars *vars);
 
 void		*ft_calloc(size_t nmemb, size_t size);
 
-/*		GET TIME		*/
+/*		GET_TIME		*/
 
 long int	ft_get(t_vars *vars);
 long int	ft_gct(void);
@@ -101,13 +108,14 @@ void		ft_free_all(t_vars *vars);
 
 t_vars		*ft_init(int ac, char **av);
 
-/*		PHILOS ROUTINE		*/
+/*		PHILOS_ROUTINE		*/
 
 void		ft_is_dead(t_vars *vars, t_philo *philo);
 void		ft_steal_fork(t_vars *vars, t_philo *philo);
 void		ft_eat(t_vars *vars, t_philo *philo);
 void		ft_think(t_vars *vars, t_philo *philo);
 void		ft_sleep(t_vars *vars, t_philo *philo);
+
 void		*ft_philosopher(void *arg);
 
 #endif

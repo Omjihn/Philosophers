@@ -6,7 +6,7 @@
 /*   By: gbricot <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 14:53:34 by gbricot           #+#    #+#             */
-/*   Updated: 2023/06/20 16:51:39 by gbricot          ###   ########.fr       */
+/*   Updated: 2023/06/21 15:30:14 by gbricot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,14 @@ int	main(int ac, char **av)
 	ft_init_threads(vars);
 	while (vars->is_end == 0 && vars->nb_finish != vars->nb_forks)
 	{
-		usleep(100);
+		usleep(300);
 	}
 	vars->is_end = 1;
 	if (vars->nb_finish == vars->nb_forks)
 		printf(GREEN EAT_MSG, ft_get(vars));
+	usleep (50);
 	ft_quit_all_threads(vars);
-	usleep(100);
+	usleep(50);
 	ft_free_all(vars);
 	return (0);
 }
